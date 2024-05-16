@@ -1,7 +1,7 @@
 import io.circe.parser.decode
 import io.circe.generic.auto.deriveDecoder
 
-@main def ft_turing(): Unit =
+@main def ft_turing(args: String*): Unit =
   println("[+] Cmdline options...")
   println("[+] Loading config...")
   println("[+] Validating config...")
@@ -9,9 +9,9 @@ import io.circe.generic.auto.deriveDecoder
   println("[+] Validating input...")
   println("[+] Starting machine...")
 
-  val content: String = os.read(os.pwd / "docs" / "test.json")
-  val tjson = decode[TuringConfig](content) match
-    case Left(error) => println("ft_turing: error: failed to parse json")
-    case Right(value) => value
-
-
+  fileOpener(args) match
+    case Right(content) =>
+      val tjson = decode[TuringConfig](content) match
+        case Left(error) => println("ft_turing: error: failed to parse json")
+        case Right(value) => println(value)
+    case Left(error) => println(error.message())
