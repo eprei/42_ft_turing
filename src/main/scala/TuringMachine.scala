@@ -19,8 +19,8 @@ final case class TuringMachine(
                 case None => ""
         }"
     
-    def transform(state: TuringState): Either[RunError, TuringState] =
-        ???
+    def next(state: TuringState): Either[RunError, TuringState] =
+        ??? //TODO here
 
 trait TuringError:
     def message(): String
@@ -38,8 +38,7 @@ enum ValidateError extends TuringError:
 enum RunError extends TuringError:
     def message(): String = this match
         case BlockedError => "not found any known rule for this position"
-        case HaltSuccess => "reached halt state, this is not an error"
-    case BlockedError, HaltSuccess
+    case BlockedError
 
 object TuringMachine:
 
@@ -119,12 +118,12 @@ object TuringMachine:
 
     def runMachine(machine: TuringMachine, state: TuringState): Either[TuringError, Unit] =
         def step(machine: TuringMachine, state: TuringState): Either[TuringError, Unit] =
-            val status: String = machine.pretty_status(state)
-            println(status)
 
-            val new_state = machine.transform(state) match
-                case Left(RunError.HaltSuccess) => return Right(())
+            println(machine.pretty_status(state)) //not pure but if we dont print it here then we won't till end of machine which is also not the plan
+
+            val new_state = machine.next(state) match
                 case Left(error) => return Left(error)
+                case Right(value) if machine.final_states.contains(value.state) => return Right(())
                 case Right(value) => value
             
             step(machine, new_state)
