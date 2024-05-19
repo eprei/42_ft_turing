@@ -15,15 +15,21 @@ import java.io.{FileNotFoundException, IOException}
   val config = try
     os.read(config_path)
   catch
-    case e: FileNotFoundException => println(s"error: file not found: $config_path"); return 1
-    case e: IOException => println(s"error: could not open: $config_path"); return 1
+    case e: FileNotFoundException => println(s"ft_turing: error: file not found: $config_path"); return 1
+    case e: IOException => println(s"ft_turing: error: could not open: $config_path"); return 1
 
   val tjson = decode[TuringConfig](config) match
       case Left(error) => println("ft_turing: error: failed to parse json"); return 1 //specify error
       case Right(value) => value
+
+  val (machine, state): (TuringMachine, TuringState) = TuringMachine.load(tjson, input) match
+    case Left(error) => println(s"ft_turing: error: ${error.message()}"); return 1
+    case Right(values) => values
       
   println("[+] Validating config...")
   println("[+] Starting machine...")
   println(tjson)
   println(input)
+  println("="*80)
+  println(machine.pretty_status(state))
   0

@@ -2,16 +2,25 @@ import io.circe.parser.*
 import io.circe.Json
 import io.circe.DecodingFailure
 import ujson.Str
-import java.net.SocketImpl
-import scala.util.Try
 import os.stat
 
 final case class TuringMachine(
     name: String,
-    state: TuringState,
+    blank: Char,
     final_states: Seq[String],
     rules: Map[String, Map[Char, TuringRule]]
-)
+):
+    def pretty_status(state: TuringState): String =
+        s"${
+            state.pretty_print(this.blank)
+        }${
+            state.match_rule(this.rules) match
+                case Some(rule) => " -> " + rule.pretty_print()
+                case None => ""
+        }"
+    
+    def transform(state: TuringState): Either[RunError, TuringState] =
+        ???
 
 trait TuringError:
     def message(): String
@@ -23,11 +32,18 @@ enum ValidateError extends TuringError:
         case UnknownCharTape => "unknown characters found in tape"
         case UnknownChar => "unknown character found in config"
         case UnknownState => "unknown state found in config"
-    case BlankNotInAlphabet, BlankInTape, UnknownCharTape, UnknownState, UnknownChar
+        case InvalidAction => "invalid action found in config"
+    case BlankNotInAlphabet, BlankInTape, UnknownCharTape, UnknownState, UnknownChar, InvalidAction
+
+enum RunError extends TuringError:
+    def message(): String = this match
+        case BlockedError => "not found any known rule for this position"
+        case HaltSuccess => "reached halt state, this is not an error"
+    case BlockedError, HaltSuccess
 
 object TuringMachine:
 
-    def load(config: TuringConfig, tape: String): Either[TuringError, TuringMachine] =
+    def load(config: TuringConfig, tape: String): Either[TuringError, (TuringMachine, TuringState)] =
         val name = config.name
         val alphabet = config.alphabet.distinct
 
@@ -35,6 +51,7 @@ object TuringMachine:
         if tape.contains(config.blank) then return Left(ValidateError.BlankInTape)
         if tape.distinct.diff(alphabet).size > 0 then
             return Left(ValidateError.UnknownCharTape)
+        val tape_seq: Seq[Char] = tape.toSeq
 
         val states = config.states.distinct
         if !states.contains(config.initial) then return Left(ValidateError.UnknownState)
@@ -42,6 +59,77 @@ object TuringMachine:
         if final_states.diff(states).size > 0 then
             return Left(ValidateError.UnknownState)
         
-        //TODO continue here
+        validate_rule_table(config.transitions, alphabet, states) match
+            case Some(error) => return Left(error)
+            case _ => ()
         
-        Left(ValidateError.BlankInTape)
+        val rules = transform_rule_table(config.transitions)
+        
+        Right((
+            TuringMachine(name, config.blank, final_states, rules),
+            TuringState(tape_seq, config.initial, 0)
+        ))
+
+    private def transform_rule_table(transitions: Map[String, Seq[TuringRuleConfig]]): Map[String, Map[Char, TuringRule]] =
+        transitions.map(s => 
+            (
+                s._1,
+                s._2.distinctBy(rule => rule.read)
+                    .map(elem => (elem.read, TuringRule(elem.to_state, elem.write,
+                        elem.action match
+                            case "RIGHT" => TuringAction.RIGHT
+                            case "LEFT" => TuringAction.LEFT
+                            case _ => throw Error("this should not happen, invalid action found after checks")
+                        
+                    )))
+                    .toMap
+            )
+        )
+    
+    private def validate_rule_table(transitions: Map[String,Seq[TuringRuleConfig]],
+        alphabet: Seq[Char], states: Seq[String]): Option[TuringError] =
+        // Start states
+        if transitions.keySet.diff(states.toSet).size > 0 then return Some(ValidateError.UnknownState)
+
+        //Chars
+        if !transitions.values.forall(rules => 
+            rules.forall(rule =>
+                alphabet.contains(rule.read) &&
+                alphabet.contains(rule.write)
+            )
+        ) then return Some(ValidateError.UnknownChar)
+
+        // End States
+        if !transitions.values.forall(rules => 
+            rules.forall(rule =>
+                states.contains(rule.to_state)
+            )
+        ) then return Some(ValidateError.UnknownState)
+
+        // Actions
+        if !transitions.values.forall(rules => 
+            rules.forall(rule =>
+                rule.action match
+                    case "RIGHT" | "LEFT" => true
+                    case _ => false
+            )
+        ) then return Some(ValidateError.InvalidAction)
+
+        None
+
+    def runMachine(machine: TuringMachine, state: TuringState): Either[TuringError, Unit] =
+        def step(machine: TuringMachine, state: TuringState): Either[TuringError, Unit] =
+            val status: String = machine.pretty_status(state)
+            println(status)
+
+            val new_state = machine.transform(state) match
+                case Left(RunError.HaltSuccess) => return Right(())
+                case Left(error) => return Left(error)
+                case Right(value) => value
+            
+            step(machine, new_state)
+        
+        println(s"running machine ${machine.name}")
+        
+        step(machine, state)
+
