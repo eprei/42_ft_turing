@@ -20,7 +20,7 @@ final case class TuringMachine(
             Right(oldState)
         else
             val charRead = oldState.tape(oldState.pointer)
-            this.rules(oldState.state).get(charRead) match
+            oldState.match_rule(this.rules) match
                 case Some(rule) => createNewState(oldState, rule)
                 case None => Left(RunError.BlockedError)
 
