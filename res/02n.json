@@ -1,12 +1,23 @@
 {
   "name" : "zero_squared_word_decider",
-  "alphabet": [ ],
-  "blank" : "",
-  "states" : [ ],
-  "initial" : "",
-  "finals" : [ ],
+  "alphabet": [ "0", "y", "n", "." ],
+  "blank" : ".",
+  "states" : [ "scanRight", "findNextZero", "end", "HALT"],
+  "initial" : "scanRight",
+  "finals" : [ "HALT" ],
 
   "transitions" : {
 
+    "scanRight": [
+      { "read" : ".", "to_state": "end", "write": "y", "action": "RIGHT"},
+      { "read" : "0", "to_state": "findNextZero", "write": ".", "action": "RIGHT"}
+    ],
+    "findNextZero": [
+      { "read" : ".", "to_state": "end", "write": "n", "action": "RIGHT"},
+      { "read" : "0", "to_state": "scanRight", "write": ".", "action": "RIGHT"}
+    ],
+    "end": [
+      { "read" : ".", "to_state": "HALT", "write": ".", "action": "LEFT"}
+    ]
   }
 }
