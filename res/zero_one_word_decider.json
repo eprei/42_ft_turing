@@ -1,0 +1,12 @@
+{
+  "name" : "zero_one_word_decider",
+  "alphabet": [ ],
+  "blank" : "",
+  "states" : [ ],
+  "initial" : "",
+  "finals" : [ ],
+
+  "transitions" : {
+
+  }
+}

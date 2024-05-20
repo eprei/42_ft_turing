@@ -1,0 +1,12 @@
+{
+  "name" : "palindrome_decider",
+  "alphabet": [ ],
+  "blank" : "",
+  "states" : [ ],
+  "initial" : "",
+  "finals" : [ ],
+
+  "transitions" : {
+
+  }
+}
