@@ -1,8 +1,4 @@
-import io.circe.parser.*
-import io.circe.Json
-import io.circe.DecodingFailure
-import ujson.Str
-import os.stat
+import scala.annotation.tailrec
 
 final case class TuringMachine(
     name: String,
@@ -19,8 +15,23 @@ final case class TuringMachine(
                 case None => ""
         }"
     
-    def next(state: TuringState): Either[RunError, TuringState] =
-        ??? //TODO here
+    def next(oldState: TuringState): Either[RunError, TuringState] =
+        if this.final_states.contains(oldState.state) then
+            Right(oldState)
+        else
+            val charRead = oldState.tape(oldState.pointer)
+            this.rules(oldState.state).get(charRead) match
+                case Some(rule) => createNewState(oldState, rule)
+                case None => Left(RunError.BlockedError)
+
+    private def createNewState(oldState: TuringState, rule: TuringRule): Either[RunError, TuringState] =
+        val newTape: Seq[Char] = oldState.tape.updated(oldState.pointer, rule.write)
+        val newPointer: Int = rule.action match
+            case TuringAction.RIGHT => oldState.pointer + 1
+            case TuringAction.LEFT => oldState.pointer - 1
+        newPointer match
+            case n if n < 0 => Left(RunError.OutOfTapeError)
+            case _ => Right(TuringState(tape = newTape, state = rule.to_state, pointer = newPointer))
 
 trait TuringError:
     def message(): String
@@ -38,7 +49,8 @@ enum ValidateError extends TuringError:
 enum RunError extends TuringError:
     def message(): String = this match
         case BlockedError => "not found any known rule for this position"
-    case BlockedError
+        case OutOfTapeError => "head out of tape"
+    case BlockedError, OutOfTapeError
 
 object TuringMachine:
 
@@ -48,14 +60,14 @@ object TuringMachine:
 
         if !alphabet.contains(config.blank) then return Left(ValidateError.BlankNotInAlphabet)
         if tape.contains(config.blank) then return Left(ValidateError.BlankInTape)
-        if tape.distinct.diff(alphabet).size > 0 then
+        if tape.distinct.diff(alphabet).nonEmpty then
             return Left(ValidateError.UnknownCharTape)
         val tape_seq: Seq[Char] = tape.toSeq
 
         val states = config.states.distinct
         if !states.contains(config.initial) then return Left(ValidateError.UnknownState)
         val final_states = config.finals.distinct
-        if final_states.diff(states).size > 0 then
+        if final_states.diff(states).nonEmpty then
             return Left(ValidateError.UnknownState)
         
         validate_rule_table(config.transitions, alphabet, states) match
@@ -88,7 +100,7 @@ object TuringMachine:
     private def validate_rule_table(transitions: Map[String,Seq[TuringRuleConfig]],
         alphabet: Seq[Char], states: Seq[String]): Option[TuringError] =
         // Start states
-        if transitions.keySet.diff(states.toSet).size > 0 then return Some(ValidateError.UnknownState)
+        if transitions.keySet.diff(states.toSet).nonEmpty then return Some(ValidateError.UnknownState)
 
         //Chars
         if !transitions.values.forall(rules => 
@@ -117,6 +129,7 @@ object TuringMachine:
         None
 
     def runMachine(machine: TuringMachine, state: TuringState): Either[TuringError, Unit] =
+        @tailrec
         def step(machine: TuringMachine, state: TuringState): Either[TuringError, Unit] =
 
             println(machine.pretty_status(state)) //not pure but if we dont print it here then we won't till end of machine which is also not the plan
