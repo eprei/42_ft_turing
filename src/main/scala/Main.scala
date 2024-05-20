@@ -22,14 +22,14 @@ import java.io.{FileNotFoundException, IOException}
       case Left(error) => println("ft_turing: error: failed to parse json"); return 1 //specify error
       case Right(value) => value
 
+  println("[+] Validating config...")
   val (machine, state): (TuringMachine, TuringState) = TuringMachine.load(tjson, input) match
     case Left(error) => println(s"ft_turing: error: ${error.message()}"); return 1
     case Right(values) => values
-      
-  println("[+] Validating config...")
+
   println("[+] Starting machine...")
-  println(tjson)
-  println(input)
-  println("="*80)
-  println(machine.pretty_status(state))
+  TuringMachine.runMachine(machine, state) match
+    case Left(error) => println(s"ft_turing: error: ${error.message()}"); return 1
+    case Right(_) => println(s"machine ${machine.name} ran to completion successfully!")
+
   0
