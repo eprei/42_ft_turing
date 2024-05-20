@@ -1,6 +1,6 @@
 {
   "name" : "palindrome_decider",
-  "alphabet": [ ],
+  "alphabet": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" ],
   "blank" : "",
   "states" : [ ],
   "initial" : "",
