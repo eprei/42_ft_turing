@@ -28,9 +28,8 @@ import java.io.{FileNotFoundException, IOException}
     case Right(values) => values
 
   println("[+] Starting machine...")
-  TuringMachine.runMachine(machine, state)
-//  println(tjson)
-//  println(input)
-//  println("="*80)
-//  println(machine.pretty_status(state))
+  TuringMachine.runMachine(machine, state) match
+    case Left(error) => println(s"ft_turing: error: ${error.message()}"); return 1
+    case Right(_) => println(s"machine ${machine.name} ran to completion successfully!")
+
   0
