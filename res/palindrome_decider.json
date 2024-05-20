@@ -1,12 +1,69 @@
 {
   "name" : "palindrome_decider",
-  "alphabet": [ "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" ],
-  "blank" : "",
-  "states" : [ ],
-  "initial" : "",
-  "finals" : [ ],
+  "alphabet": [ "a", "b", "c", "y", "n", "." ],
+  "blank" : ".",
+  "states" : [ "scanRight", "findLastA", "findLastB", "findLastC", "verifyLastA", "verifyLastB", "verifyLastC",
+    "goToBegin", "checkIfIsTheEnd", "end", "HALT"],
+  "initial" : "scanRight",
+  "finals" : [ "HALT" ],
 
   "transitions" : {
-
+    "scanRight": [
+      { "read" : ".", "to_state": "scanRight", "write": ".", "action": "RIGHT"},
+      { "read" : "a", "to_state": "findLastA", "write": ".", "action": "RIGHT"},
+      { "read" : "b", "to_state": "findLastB", "write": ".", "action": "RIGHT"},
+      { "read" : "c", "to_state": "findLastC", "write": ".", "action": "RIGHT"}
+    ],
+    "findLastA" : [
+      { "read" : ".", "to_state": "verifyLastA", "write": ".", "action": "LEFT"},
+      { "read" : "a", "to_state": "findLastA", "write": "a", "action": "RIGHT"},
+      { "read" : "b", "to_state": "findLastA", "write": "b", "action": "RIGHT"},
+      { "read" : "c", "to_state": "findLastA", "write": "c", "action": "RIGHT"}
+    ],
+    "verifyLastA" : [
+      { "read" : ".", "to_state": "end", "write": "y", "action": "LEFT"},
+      { "read" : "a", "to_state": "goToBegin", "write": ".", "action": "LEFT"},
+      { "read" : "b", "to_state": "end", "write": "n", "action": "RIGHT"},
+      { "read" : "c", "to_state": "end", "write": "n", "action": "RIGHT"}
+    ],
+    "findLastB" : [
+      { "read" : ".", "to_state": "verifyLastB", "write": ".", "action": "LEFT"},
+      { "read" : "a", "to_state": "findLastB", "write": "a", "action": "RIGHT"},
+      { "read" : "b", "to_state": "findLastB", "write": "b", "action": "RIGHT"},
+      { "read" : "c", "to_state": "findLastB", "write": "c", "action": "RIGHT"}
+    ],
+    "verifyLastB" : [
+      { "read" : ".", "to_state": "end", "write": "y", "action": "LEFT"},
+      { "read" : "a", "to_state": "end", "write": "n", "action": "RIGHT"},
+      { "read" : "b", "to_state": "goToBegin", "write": ".", "action": "LEFT"},
+      { "read" : "c", "to_state": "end", "write": "n", "action": "RIGHT"}
+    ],
+    "findLastC" : [
+      { "read" : ".", "to_state": "verifyLastC", "write": ".", "action": "LEFT"},
+      { "read" : "a", "to_state": "findLastC", "write": "a", "action": "RIGHT"},
+      { "read" : "b", "to_state": "findLastC", "write": "b", "action": "RIGHT"},
+      { "read" : "c", "to_state": "findLastC", "write": "c", "action": "RIGHT"}
+    ],
+    "verifyLastC" : [
+      { "read" : ".", "to_state": "end", "write": "y", "action": "LEFT"},
+      { "read" : "a", "to_state": "end", "write": "n", "action": "RIGHT"},
+      { "read" : "b", "to_state": "end", "write": "b", "action": "RIGHT"},
+      { "read" : "c", "to_state": "goToBegin", "write": ".", "action": "LEFT"}
+    ],
+    "goToBegin" : [
+      { "read" : ".", "to_state": "checkIfIsTheEnd", "write": ".", "action": "RIGHT"},
+      { "read" : "a", "to_state": "goToBegin", "write": "a", "action": "LEFT"},
+      { "read" : "b", "to_state": "goToBegin", "write": "b", "action": "LEFT"},
+      { "read" : "c", "to_state": "goToBegin", "write": "c", "action": "LEFT"}
+    ],
+    "checkIfIsTheEnd" : [
+      { "read" : ".", "to_state": "end", "write": "y", "action": "RIGHT"},
+      { "read" : "a", "to_state": "scanRight", "write": "a", "action": "LEFT"},
+      { "read" : "b", "to_state": "scanRight", "write": "b", "action": "LEFT"},
+      { "read" : "c", "to_state": "scanRight", "write": "c", "action": "LEFT"}
+    ],
+    "end": [
+      { "read" : ".", "to_state": "HALT", "write": ".", "action": "LEFT"}
+    ]
   }
 }
