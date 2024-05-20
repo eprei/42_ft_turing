@@ -39,8 +39,7 @@ enum ValidateError extends TuringError:
 enum RunError extends TuringError:
     def message(): String = this match
         case BlockedError => "not found any known rule for this position"
-        case OutOfTapeError => "head out of tape"
-    case BlockedError, OutOfTapeError
+    case BlockedError
 
 object TuringMachine:
 
