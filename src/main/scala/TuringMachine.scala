@@ -23,15 +23,6 @@ final case class TuringMachine(
                 case Some(rule) => Right(oldState.next(rule, this.blank))
                 case None => Left(RunError.BlockedError)
 
-    private def createNewState(oldState: TuringState, rule: TuringRule): Either[RunError, TuringState] =
-        val newTape: Seq[Char] = oldState.tape.updated(oldState.pointer, rule.write)
-        val newPointer: Int = rule.action match
-            case TuringAction.RIGHT => oldState.pointer + 1
-            case TuringAction.LEFT => oldState.pointer - 1
-        newPointer match
-            case n if n < 0 => Left(RunError.OutOfTapeError)
-            case _ => Right(TuringState(tape = newTape, state = rule.to_state, pointer = newPointer))
-
 trait TuringError:
     def message(): String
 
