@@ -23,6 +23,25 @@ final case class TuringState(
             case Some(value) => value.get(char)
             case None => None
 
+    def next(rule: TuringRule, blank: Char): TuringState =
+        val tape: Seq[Char] = this.tape.updated(this.pointer, rule.write)
+        val (new_tape, new_pointer) = rule.action match
+        case TuringAction.LEFT =>
+            if this.pointer <= 0 then
+                (blank +: tape, this.pointer)
+            else
+                (tape, this.pointer - 1)
+        case TuringAction.RIGHT =>
+            if this.pointer >= tape.size - 1 then
+                (tape :+ blank, this.pointer + 1)
+            else
+                (tape, this.pointer + 1)
+        TuringState(
+            new_tape,
+            rule.to_state,
+            new_pointer
+        )
+
 
 object TuringState:
     val print_len: Int = 20

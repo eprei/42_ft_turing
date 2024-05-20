@@ -19,9 +19,8 @@ final case class TuringMachine(
         if this.final_states.contains(oldState.state) then
             Right(oldState)
         else
-            val charRead = oldState.tape(oldState.pointer)
             oldState.match_rule(this.rules) match
-                case Some(rule) => createNewState(oldState, rule)
+                case Some(rule) => Right(oldState.next(rule, this.blank))
                 case None => Left(RunError.BlockedError)
 
     private def createNewState(oldState: TuringState, rule: TuringRule): Either[RunError, TuringState] =
