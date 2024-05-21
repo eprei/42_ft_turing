@@ -119,16 +119,16 @@ object TuringMachine:
 
         None
 
-    def runMachine(machine: TuringMachine, state: TuringState): Either[TuringError, Unit] =
+    def runMachine(machine: TuringMachine, state: TuringState): Either[TuringError, TuringState] =
         @tailrec
-        def step(machine: TuringMachine, state: TuringState): Either[TuringError, Unit] =
+        def step(machine: TuringMachine, state: TuringState): Either[TuringError, TuringState] =
 
             println(machine.pretty_status(state)) //not pure but if we dont print it here then we won't till end of machine which is also not the plan
 
             val new_state = machine.next(state) match
                 case Left(error) => return Left(error)
-                case Right(value) if machine.final_states.contains(value.state) => return Right(())
-                case Right(value) => value
+                case Right(state) if machine.final_states.contains(state.state) => return Right(state)
+                case Right(state) => state
             
             step(machine, new_state)
         

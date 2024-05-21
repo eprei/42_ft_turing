@@ -30,6 +30,6 @@ import java.io.{FileNotFoundException, IOException}
   println("[+] Starting machine...")
   TuringMachine.runMachine(machine, state) match
     case Left(error) => println(s"ft_turing: error: ${error.message()}"); return 1
-    case Right(_) => println(s"machine ${machine.name} ran to completion successfully!")
+    case Right(final_state) => println(s"${final_state.pretty_print(machine.blank)}\nmachine ${machine.name} ran to completion successfully!")
 
   0
