@@ -2,40 +2,30 @@
   "name" : "unary_add",
   "alphabet": [ "1", ".", "+", "=" ],
   "blank" : ".",
-  "states" : [ "scanRight", "addOne", "eraseOne", "leftShift", "shiftNumberOne", "shiftPlus","HALT" ],
+  "states" : [ "scanRight", "checkNext", "moveOneLeft", "deletePlus", "HALT" ],
   "initial" : "scanRight",
   "finals" : [ "HALT" ],
 
   "transitions" : {
 
     "scanRight": [
-      { "read" : ".", "to_state": "leftShift", "write": ".", "action": "RIGHT"},
       { "read" : "1", "to_state": "scanRight", "write": "1", "action": "RIGHT"},
-      { "read" : "+", "to_state": "addOne", "write": "+", "action": "RIGHT"},
-      { "read" : "=", "to_state": "eraseOne" , "write": ".", "action": "LEFT" }
+      { "read" : "+", "to_state": "checkNext", "write": ".", "action": "RIGHT"},
+      { "read" : "=", "to_state": "deletePlus", "write": ".", "action": "RIGHT"}
     ],
-    "addOne": [
-      { "read" : ".", "to_state": "leftShift", "write": ".", "action": "RIGHT"},
-      { "read" : "1", "to_state": "addOne", "write": ".", "action": "LEFT"},
-      { "read" : "+", "to_state": "scanRight", "write": "1", "action": "RIGHT"},
-      { "read" : "=", "to_state": "eraseOne" , "write": ".", "action": "LEFT"}
+    "checkNext": [
+      { "read" : "1", "to_state": "moveOneLeft", "write": "+", "action": "LEFT"},
+      { "read" : "+", "to_state": "checkNext", "write": "+", "action": "RIGHT"},
+      { "read" : "=", "to_state": "deletePlus", "write": ".", "action": "LEFT"}
     ],
-    "eraseOne": [
-      { "read" : "+", "to_state": "HALT" , "write": ".", "action": "LEFT"},
-      { "read" : ".", "to_state": "HALT" , "write": ".", "action": "LEFT"},
-      { "read" : "1", "to_state": "HALT" , "write": ".", "action": "LEFT"}
+    "moveOneLeft": [
+      { "read" : "+", "to_state": "moveOneLeft", "write": "+", "action": "LEFT"},
+      { "read" : ".", "to_state": "scanRight", "write": "1", "action": "RIGHT"}
     ],
-    "leftShift": [
-      { "read" : ".", "to_state": "leftShift" , "write": ".", "action": "RIGHT"},
-      { "read" : "1", "to_state": "shiftNumberOne" , "write": ".", "action": "LEFT"},
-      { "read" : "+", "to_state": "shiftPlus" , "write": ".", "action": "LEFT"},
-      { "read" : "=", "to_state": "eraseOne" , "write": ".", "action": "LEFT"}
-    ],
-    "shiftNumberOne": [
-      { "read" : ".", "to_state": "scanRight" , "write": "1", "action": "LEFT"}
-    ],
-    "shiftPlus": [
-      { "read" : ".", "to_state": "scanRight" , "write": "+", "action": "LEFT"}
+    "deletePlus": [
+      { "read" : ".", "to_state": "HALT", "write": ".", "action": "RIGHT"},
+      { "read" : "1", "to_state": "HALT", "write": "1", "action": "RIGHT"},
+      { "read" : "+", "to_state": "deletePlus", "write": ".", "action": "LEFT"}
     ]
   }
 }
