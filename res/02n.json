@@ -2,19 +2,19 @@
   "name" : "zero_squared_word_decider",
   "alphabet": [ "0", "y", "n", "." ],
   "blank" : ".",
-  "states" : [ "scanRight", "findNextZero", "end", "HALT"],
-  "initial" : "scanRight",
+  "states" : [ "even", "odd", "end", "HALT"],
+  "initial" : "even",
   "finals" : [ "HALT" ],
 
   "transitions" : {
 
-    "scanRight": [
+    "even": [
       { "read" : ".", "to_state": "end", "write": "y", "action": "RIGHT"},
-      { "read" : "0", "to_state": "findNextZero", "write": ".", "action": "RIGHT"}
+      { "read" : "0", "to_state": "odd", "write": "0", "action": "RIGHT"}
     ],
-    "findNextZero": [
+    "odd": [
       { "read" : ".", "to_state": "end", "write": "n", "action": "RIGHT"},
-      { "read" : "0", "to_state": "scanRight", "write": ".", "action": "RIGHT"}
+      { "read" : "0", "to_state": "even", "write": "0", "action": "RIGHT"}
     ],
     "end": [
       { "read" : ".", "to_state": "HALT", "write": ".", "action": "LEFT"}
