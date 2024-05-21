@@ -1,0 +1,12 @@
+{
+  "name" : "unary_add_runner",
+  "alphabet": [ ],
+  "blank" : "",
+  "states" : [ ],
+  "initial" : "",
+  "finals" : [ ],
+
+  "transitions" : {
+
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "name" : "zero_one_word_decider",
+  "alphabet": [ "0", "1", "y", "n", "." ],
+  "blank" : ".",
+  "states" : [ "scanRight", "findLastZero", "verifyLastZero", "findLastOne", "verifyLastOne", "findFirstOne",
+    "findFirstZero", "checkFirstZero", "findFirstOne", "checkFirstOne", "answerNo", "answerYes", "end", "HALT"],
+  "initial" : "scanRight",
+  "finals" : [ "HALT" ],
+
+  "transitions" : {
+
+    "scanRight": [
+      { "read" : ".", "to_state": "scanRight", "write": ".", "action": "RIGHT"},
+      { "read" : "0", "to_state": "findLastOne", "write": ".", "action": "RIGHT"},
+      { "read" : "1", "to_state": "findLastZero", "write": ".", "action": "RIGHT"}
+    ],
+    "findLastZero": [
+      { "read" : ".", "to_state": "verifyLastZero", "write": ".", "action": "LEFT"},
+      { "read" : "0", "to_state": "findLastZero", "write": "0", "action": "RIGHT"},
+      { "read" : "1", "to_state": "findLastZero", "write": "1", "action": "RIGHT"}
+    ],
+    "verifyLastZero": [
+      { "read" : ".", "to_state": "end", "write": "n", "action": "RIGHT"},
+      { "read" : "0", "to_state": "findFirstOne", "write": ".", "action": "LEFT"},
+      { "read" : "1", "to_state": "end", "write": "n", "action": "RIGHT"}
+    ],
+    "findLastOne": [
+      { "read" : ".", "to_state": "verifyLastOne", "write": ".", "action": "LEFT"},
+      { "read" : "0", "to_state": "findLastOne", "write": "0", "action": "RIGHT"},
+      { "read" : "1", "to_state": "findLastOne", "write": "1", "action": "RIGHT"}
+    ],
+    "verifyLastOne": [
+      { "read" : ".", "to_state": "end", "write": "n", "action": "RIGHT"},
+      { "read" : "0", "to_state": "end", "write": "n", "action": "RIGHT"},
+      { "read" : "1", "to_state": "findFirstZero", "write": ".", "action": "LEFT"}
+    ],
+    "findFirstZero": [
+      { "read" : ".", "to_state": "checkFirstZero", "write": ".", "action": "RIGHT"},
+      { "read" : "0", "to_state": "findFirstZero", "write": "0", "action": "LEFT"},
+      { "read" : "1", "to_state": "findFirstZero", "write": "1", "action": "LEFT"}
+    ],
+    "checkFirstZero": [
+      { "read" : ".", "to_state": "answerYes", "write": ".", "action": "RIGHT"},
+      { "read" : "0", "to_state": "scanRight", "write": "0", "action": "LEFT"},
+      { "read" : "1", "to_state": "answerNo", "write": ".", "action": "RIGHT"}
+    ],
+    "findFirstOne": [
+      { "read" : ".", "to_state": "checkFirstOne", "write": ".", "action": "RIGHT"},
+      { "read" : "0", "to_state": "findFirstOne", "write": "0", "action": "LEFT"},
+      { "read" : "1", "to_state": "findFirstOne", "write": "1", "action": "LEFT"}
+    ],
+    "checkFirstOne": [
+      { "read" : ".", "to_state": "answerYes", "write": ".", "action": "RIGHT"},
+      { "read" : "0", "to_state": "answerNo", "write": ".", "action": "RIGHT"},
+      { "read" : "1", "to_state": "scanRight", "write": "1", "action": "LEFT"}
+    ],
+    "answerNo": [
+      { "read" : ".", "to_state": "end", "write": "n", "action": "RIGHT"},
+      { "read" : "0", "to_state": "answerNo", "write": ".", "action": "RIGHT"},
+      { "read" : "1", "to_state": "answerNo", "write": ".", "action": "RIGHT"}
+    ],
+    "answerYes": [
+      { "read" : ".", "to_state": "end", "write": "y", "action": "RIGHT"},
+      { "read" : "0", "to_state": "answerYes", "write": ".", "action": "RIGHT"},
+      { "read" : "1", "to_state": "answerYes", "write": ".", "action": "RIGHT"}
+    ],
+    "end": [
+      { "read" : ".", "to_state": "HALT", "write": ".", "action": "LEFT"}
+    ]
+  }
+}
