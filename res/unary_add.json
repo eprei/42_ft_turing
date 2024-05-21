@@ -1,41 +1,20 @@
 {
   "name" : "unary_add",
-  "alphabet": [ "1", ".", "+", "=" ],
+  "alphabet": [ "1", ".", "+" ],
   "blank" : ".",
-  "states" : [ "scanRight", "addOne", "eraseOne", "leftShift", "shiftNumberOne", "shiftPlus","HALT" ],
+  "states" : [ "scanRight", "eraseOne","HALT" ],
   "initial" : "scanRight",
   "finals" : [ "HALT" ],
 
   "transitions" : {
 
     "scanRight": [
-      { "read" : ".", "to_state": "leftShift", "write": ".", "action": "RIGHT"},
       { "read" : "1", "to_state": "scanRight", "write": "1", "action": "RIGHT"},
-      { "read" : "+", "to_state": "addOne", "write": "+", "action": "RIGHT"},
-      { "read" : "=", "to_state": "eraseOne" , "write": ".", "action": "LEFT" }
-    ],
-    "addOne": [
-      { "read" : ".", "to_state": "leftShift", "write": ".", "action": "RIGHT"},
-      { "read" : "1", "to_state": "addOne", "write": ".", "action": "LEFT"},
       { "read" : "+", "to_state": "scanRight", "write": "1", "action": "RIGHT"},
-      { "read" : "=", "to_state": "eraseOne" , "write": ".", "action": "LEFT"}
+      { "read" : ".", "to_state": "eraseOne" , "write": ".", "action": "LEFT" }
     ],
     "eraseOne": [
-      { "read" : "+", "to_state": "HALT" , "write": ".", "action": "LEFT"},
-      { "read" : ".", "to_state": "HALT" , "write": ".", "action": "LEFT"},
-      { "read" : "1", "to_state": "HALT" , "write": ".", "action": "LEFT"}
-    ],
-    "leftShift": [
-      { "read" : ".", "to_state": "leftShift" , "write": ".", "action": "RIGHT"},
-      { "read" : "1", "to_state": "shiftNumberOne" , "write": ".", "action": "LEFT"},
-      { "read" : "+", "to_state": "shiftPlus" , "write": ".", "action": "LEFT"},
-      { "read" : "=", "to_state": "eraseOne" , "write": ".", "action": "LEFT"}
-    ],
-    "shiftNumberOne": [
-      { "read" : ".", "to_state": "scanRight" , "write": "1", "action": "LEFT"}
-    ],
-    "shiftPlus": [
-      { "read" : ".", "to_state": "scanRight" , "write": "+", "action": "LEFT"}
+      { "read" : "1", "to_state": "HALT" , "write": ".", "action": "RIGHT"}
     ]
   }
 }
