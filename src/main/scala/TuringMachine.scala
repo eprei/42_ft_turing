@@ -34,7 +34,8 @@ enum ValidateError extends TuringError:
         case UnknownChar => "unknown character found in config"
         case UnknownState => "unknown state found in config"
         case InvalidAction => "invalid action found in config"
-    case BlankNotInAlphabet, BlankInTape, UnknownCharTape, UnknownState, UnknownChar, InvalidAction
+        case EmptyArgument => "tape is empty"
+    case BlankNotInAlphabet, BlankInTape, UnknownCharTape, UnknownState, UnknownChar, InvalidAction, EmptyArgument
 
 enum RunError extends TuringError:
     def message(): String = this match
@@ -48,6 +49,7 @@ object TuringMachine:
         val alphabet = config.alphabet.distinct
 
         if !alphabet.contains(config.blank) then return Left(ValidateError.BlankNotInAlphabet)
+        if tape.isEmpty then return Left(ValidateError.EmptyArgument)
         if tape.contains(config.blank) then return Left(ValidateError.BlankInTape)
         if tape.distinct.diff(alphabet).nonEmpty then
             return Left(ValidateError.UnknownCharTape)
