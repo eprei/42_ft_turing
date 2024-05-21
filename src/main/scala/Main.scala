@@ -19,7 +19,7 @@ import java.io.{FileNotFoundException, IOException}
     case e: IOException => println(s"ft_turing: error: could not open: $config_path"); return 1
 
   val tjson = decode[TuringConfig](config) match
-      case Left(error) => println("ft_turing: error: failed to parse json"); return 1 //specify error
+      case Left(error) => println("ft_turing: error: failed to parse json: " + error); return 1
       case Right(value) => value
 
   println("[+] Validating config...")

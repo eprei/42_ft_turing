@@ -1,12 +1,249 @@
 {
   "name" : "unary_add_runner",
-  "alphabet": [ ],
-  "blank" : "",
-  "states" : [ ],
-  "initial" : "",
-  "finals" : [ ],
-
+  "alphabet": [ "S", "E", "h", "s", "e", "r", "l", "^", ":", "1", "_", ".", "+" ],
+  "blank" : ".",
+  "states" : [ "get initial state",
+    "go to beginning of tape (state S)",
+    "S",
+    "E",
+    "find rule S1",
+    "find rule S+",
+    "find rule S.",
+    "find rule E1",
+    "check 1",
+    "check +",
+    "check .",
+    "right shift x 3 and search for character 1",
+    "right shift x 2 and search for character 1",
+    "right shift x 1 and search for character 1",
+    "right shift x 3 and search for character +",
+    "right shift x 2 and search for character +",
+    "right shift x 1 and search for character +",
+    "right shift x 3 and search for character .",
+    "right shift x 2 and search for character .",
+    "right shift x 1 and search for character .",
+    "get to_state",
+    "get write (to_state s)",
+    "get write (to_state e)",
+    "get write (to_state h)",
+    "get action (to_state s , write 1)",
+    "get action (to_state s , write +)",
+    "get action (to_state s , write .)",
+    "get action (to_state e , write .)",
+    "get action (to_state h , write .)",
+    "apply rule to pointer (to_state s , write 1 , action right)",
+    "apply rule to pointer (to_state e , write . , action left)",
+    "apply rule to pointer (to_state h , write . , action right)",
+    "HALT" ],
+  "initial" : "get initial state",
+  "finals" : [ "HALT" ],
   "transitions" : {
-
+    "get initial state" : [
+      { "read" : "S", "to_state": "go to beginning of tape (state S)", "write": "S", "action": "RIGHT"}
+    ],
+    "go to beginning of tape (state S)": [
+      { "read" : "S", "to_state": "go to beginning of tape (state S)", "write": "S", "action": "RIGHT"},
+      { "read" : "E", "to_state": "go to beginning of tape (state S)", "write": "E", "action": "RIGHT"},
+      { "read" : "h", "to_state": "go to beginning of tape (state S)", "write": "h", "action": "RIGHT"},
+      { "read" : "s", "to_state": "go to beginning of tape (state S)", "write": "s", "action": "RIGHT"},
+      { "read" : "e", "to_state": "go to beginning of tape (state S)", "write": "e", "action": "RIGHT"},
+      { "read" : "r", "to_state": "go to beginning of tape (state S)", "write": "r", "action": "RIGHT"},
+      { "read" : "l", "to_state": "go to beginning of tape (state S)", "write": "l", "action": "RIGHT"},
+      { "read" : "^", "to_state": "go to beginning of tape (state S)", "write": "^", "action": "RIGHT"},
+      { "read" : ":", "to_state": "S", "write": ":", "action": "RIGHT"},
+      { "read" : "1", "to_state": "go to beginning of tape (state S)", "write": "1", "action": "RIGHT"},
+      { "read" : "_", "to_state": "go to beginning of tape (state S)", "write": "_", "action": "RIGHT"},
+      { "read" : "+", "to_state": "go to beginning of tape (state S)", "write": "+", "action": "RIGHT"}
+    ],
+    "S": [
+      { "read" : "1", "to_state": "find rule S1", "write": "^", "action": "LEFT"},
+      { "read" : "+", "to_state": "find rule S+", "write": "^", "action": "LEFT"},
+      { "read" : ".", "to_state": "find rule S.", "write": "^", "action": "LEFT"}
+    ],
+    "find rule S1" : [
+      { "read" : "S", "to_state": "check 1", "write": "S", "action": "RIGHT"},
+      { "read" : "E", "to_state": "find rule S1", "write": "E", "action": "LEFT"},
+      { "read" : "h", "to_state": "find rule S1", "write": "h", "action": "LEFT"},
+      { "read" : "s", "to_state": "find rule S1", "write": "s", "action": "LEFT"},
+      { "read" : "e", "to_state": "find rule S1", "write": "e", "action": "LEFT"},
+      { "read" : "r", "to_state": "find rule S1", "write": "r", "action": "LEFT"},
+      { "read" : "l", "to_state": "find rule S1", "write": "l", "action": "LEFT"},
+      { "read" : "^", "to_state": "find rule S1", "write": "^", "action": "LEFT"},
+      { "read" : ":", "to_state": "find rule S1", "write": ":", "action": "LEFT"},
+      { "read" : "1", "to_state": "find rule S1", "write": "1", "action": "LEFT"},
+      { "read" : "_", "to_state": "find rule S1", "write": "_", "action": "LEFT"},
+      { "read" : "+", "to_state": "find rule S1", "write": "+", "action": "LEFT"}
+    ],
+    "check 1" : [
+      { "read" : "1", "to_state": "get to_state", "write": "1", "action": "RIGHT"},
+      { "read" : "+", "to_state": "right shift x 3 and search for character 1", "write": "+", "action": "RIGHT"},
+      { "read" : "_", "to_state": "right shift x 3 and search for character 1", "write": "_", "action": "RIGHT"}
+    ],
+    "right shift x 3 and search for character 1": [
+      { "read" : "s", "to_state": "right shift x 2 and search for character 1", "write": "s", "action": "RIGHT"},
+      { "read" : "e", "to_state": "right shift x 2 and search for character 1", "write": "e", "action": "RIGHT"},
+      { "read" : "h", "to_state": "right shift x 2 and search for character 1", "write": "h", "action": "RIGHT"}
+    ],
+    "right shift x 2 and search for character 1": [
+      { "read" : "1", "to_state": "right shift x 1 and search for character 1", "write": "1", "action": "RIGHT"},
+      { "read" : "+", "to_state": "right shift x 1 and search for character 1", "write": "+", "action": "RIGHT"},
+      { "read" : "_", "to_state": "right shift x 1 and search for character 1", "write": "_", "action": "RIGHT"}
+    ],
+    "right shift x 1 and search for character 1": [
+      { "read" : "l", "to_state": "check 1", "write": "l", "action": "RIGHT"},
+      { "read" : "r", "to_state": "check 1", "write": "r", "action": "RIGHT"}
+    ],
+    "find rule S+" : [
+      { "read" : "S", "to_state": "check +", "write": "S", "action": "RIGHT"},
+      { "read" : "E", "to_state": "find rule S+", "write": "E", "action": "LEFT"},
+      { "read" : "h", "to_state": "find rule S+", "write": "h", "action": "LEFT"},
+      { "read" : "s", "to_state": "find rule S+", "write": "s", "action": "LEFT"},
+      { "read" : "e", "to_state": "find rule S+", "write": "e", "action": "LEFT"},
+      { "read" : "r", "to_state": "find rule S+", "write": "r", "action": "LEFT"},
+      { "read" : "l", "to_state": "find rule S+", "write": "l", "action": "LEFT"},
+      { "read" : "^", "to_state": "find rule S+", "write": "^", "action": "LEFT"},
+      { "read" : ":", "to_state": "find rule S+", "write": ":", "action": "LEFT"},
+      { "read" : "1", "to_state": "find rule S+", "write": "1", "action": "LEFT"},
+      { "read" : "_", "to_state": "find rule S+", "write": "_", "action": "LEFT"},
+      { "read" : "+", "to_state": "find rule S+", "write": "+", "action": "LEFT"}
+    ],
+    "check +" : [
+      { "read" : "1", "to_state": "right shift x 3 and search for character +", "write": "1", "action": "RIGHT"},
+      { "read" : "+", "to_state": "get to_state", "write": "+", "action": "RIGHT"},
+      { "read" : "_", "to_state": "right shift x 3 and search for character +", "write": "_", "action": "RIGHT"}
+    ],
+    "right shift x 3 and search for character +": [
+      { "read" : "s", "to_state": "right shift x 2 and search for character +", "write": "s", "action": "RIGHT"},
+      { "read" : "e", "to_state": "right shift x 2 and search for character +", "write": "e", "action": "RIGHT"},
+      { "read" : "h", "to_state": "right shift x 2 and search for character +", "write": "h", "action": "RIGHT"}
+    ],
+    "right shift x 2 and search for character +": [
+      { "read" : "1", "to_state": "right shift x 1 and search for character +", "write": "1", "action": "RIGHT"},
+      { "read" : "+", "to_state": "right shift x 1 and search for character +", "write": "+", "action": "RIGHT"},
+      { "read" : "_", "to_state": "right shift x 1 and search for character +", "write": "_", "action": "RIGHT"}
+    ],
+    "right shift x 1 and search for character +": [
+      { "read" : "l", "to_state": "check +", "write": "l", "action": "RIGHT"},
+      { "read" : "r", "to_state": "check +", "write": "r", "action": "RIGHT"}
+    ],
+    "find rule S." : [
+      { "read" : "S", "to_state": "check .", "write": "S", "action": "RIGHT"},
+      { "read" : "E", "to_state": "find rule S.", "write": "E", "action": "LEFT"},
+      { "read" : "h", "to_state": "find rule S.", "write": "h", "action": "LEFT"},
+      { "read" : "s", "to_state": "find rule S.", "write": "s", "action": "LEFT"},
+      { "read" : "e", "to_state": "find rule S.", "write": "e", "action": "LEFT"},
+      { "read" : "r", "to_state": "find rule S.", "write": "r", "action": "LEFT"},
+      { "read" : "l", "to_state": "find rule S.", "write": "l", "action": "LEFT"},
+      { "read" : "^", "to_state": "find rule S.", "write": "^", "action": "LEFT"},
+      { "read" : ":", "to_state": "find rule S.", "write": ":", "action": "LEFT"},
+      { "read" : "1", "to_state": "find rule S.", "write": "1", "action": "LEFT"},
+      { "read" : "_", "to_state": "find rule S.", "write": "_", "action": "LEFT"},
+      { "read" : "+", "to_state": "find rule S.", "write": "+", "action": "LEFT"}
+    ],
+    "check ." : [
+      { "read" : "1", "to_state": "right shift x 3 and search for character .", "write": "1", "action": "RIGHT"},
+      { "read" : "+", "to_state": "right shift x 3 and search for character .", "write": "+", "action": "RIGHT"},
+      { "read" : "_", "to_state": "get to_state", "write": "_", "action": "RIGHT"}
+    ],
+    "right shift x 3 and search for character .": [
+      { "read" : "s", "to_state": "right shift x 2 and search for character .", "write": "s", "action": "RIGHT"},
+      { "read" : "e", "to_state": "right shift x 2 and search for character .", "write": "e", "action": "RIGHT"},
+      { "read" : "h", "to_state": "right shift x 2 and search for character .", "write": "h", "action": "RIGHT"}
+    ],
+    "right shift x 2 and search for character .": [
+      { "read" : "1", "to_state": "right shift x 1 and search for character .", "write": "1", "action": "RIGHT"},
+      { "read" : "+", "to_state": "right shift x 1 and search for character .", "write": "+", "action": "RIGHT"},
+      { "read" : "_", "to_state": "right shift x 1 and search for character .", "write": "_", "action": "RIGHT"}
+    ],
+    "right shift x 1 and search for character .": [
+      { "read" : "l", "to_state": "check .", "write": "l", "action": "RIGHT"},
+      { "read" : "r", "to_state": "check .", "write": "r", "action": "RIGHT"}
+    ],
+    "get to_state" : [
+      { "read" : "s", "to_state": "get write (to_state s)", "write": "s", "action": "RIGHT"},
+      { "read" : "e", "to_state": "get write (to_state e)", "write": "e", "action": "RIGHT"},
+      { "read" : "h", "to_state": "get write (to_state h)", "write": "h", "action": "RIGHT"}
+    ],
+    "get write (to_state s)" : [
+      { "read" : "1", "to_state": "get action (to_state s , write 1)", "write": "1", "action": "RIGHT"},
+      { "read" : "+", "to_state": "get action (to_state s , write +)", "write": "+", "action": "RIGHT"},
+      { "read" : "_", "to_state": "get action (to_state s , write .)", "write": "_", "action": "RIGHT"}
+    ],
+    "get action (to_state s , write 1)" : [
+      { "read" : "r", "to_state": "apply rule to pointer (to_state s , write 1 , action right)", "write": "r", "action": "RIGHT"}
+    ],
+    "apply rule to pointer (to_state s , write 1 , action right)":[
+      { "read" : "S", "to_state": "apply rule to pointer (to_state s , write 1 , action right)", "write": "S", "action": "RIGHT"},
+      { "read" : "E", "to_state": "apply rule to pointer (to_state s , write 1 , action right)", "write": "E", "action": "RIGHT"},
+      { "read" : "h", "to_state": "apply rule to pointer (to_state s , write 1 , action right)", "write": "h", "action": "RIGHT"},
+      { "read" : "s", "to_state": "apply rule to pointer (to_state s , write 1 , action right)", "write": "s", "action": "RIGHT"},
+      { "read" : "e", "to_state": "apply rule to pointer (to_state s , write 1 , action right)", "write": "e", "action": "RIGHT"},
+      { "read" : "r", "to_state": "apply rule to pointer (to_state s , write 1 , action right)", "write": "r", "action": "RIGHT"},
+      { "read" : "l", "to_state": "apply rule to pointer (to_state s , write 1 , action right)", "write": "l", "action": "RIGHT"},
+      { "read" : "^", "to_state": "S", "write": "1", "action": "RIGHT"},
+      { "read" : ":", "to_state": "apply rule to pointer (to_state s , write 1 , action right)", "write": ":", "action": "RIGHT"},
+      { "read" : "1", "to_state": "apply rule to pointer (to_state s , write 1 , action right)", "write": "1", "action": "RIGHT"},
+      { "read" : "_", "to_state": "apply rule to pointer (to_state s , write 1 , action right)", "write": "_", "action": "RIGHT"},
+      { "read" : "+", "to_state": "apply rule to pointer (to_state s , write 1 , action right)", "write": "+", "action": "RIGHT"}
+    ],
+    "get write (to_state e)" : [
+      { "read" : "_", "to_state": "get action (to_state e , write .)", "write": "_", "action": "RIGHT"}
+    ],
+    "get action (to_state e , write .)" : [
+      { "read" : "l", "to_state": "apply rule to pointer (to_state e , write . , action left)", "write": "l", "action": "RIGHT"}
+    ],
+    "get write (to_state h)" : [
+      { "read" : "_", "to_state": "get action (to_state h , write .)", "write": "_", "action": "RIGHT"}
+    ],
+    "get action (to_state h , write .)" : [
+      { "read" : "r", "to_state": "apply rule to pointer (to_state h , write . , action right)", "write": "r", "action": "RIGHT"}
+    ],
+    "apply rule to pointer (to_state e , write . , action left)":[
+      { "read" : "S", "to_state": "apply rule to pointer (to_state e , write . , action left)", "write": "S", "action": "RIGHT"},
+      { "read" : "E", "to_state": "apply rule to pointer (to_state e , write . , action left)", "write": "E", "action": "RIGHT"},
+      { "read" : "h", "to_state": "apply rule to pointer (to_state e , write . , action left)", "write": "h", "action": "RIGHT"},
+      { "read" : "s", "to_state": "apply rule to pointer (to_state e , write . , action left)", "write": "s", "action": "RIGHT"},
+      { "read" : "e", "to_state": "apply rule to pointer (to_state e , write . , action left)", "write": "e", "action": "RIGHT"},
+      { "read" : "r", "to_state": "apply rule to pointer (to_state e , write . , action left)", "write": "r", "action": "RIGHT"},
+      { "read" : "l", "to_state": "apply rule to pointer (to_state e , write . , action left)", "write": "l", "action": "RIGHT"},
+      { "read" : "^", "to_state": "E", "write": ".", "action": "LEFT"},
+      { "read" : ":", "to_state": "apply rule to pointer (to_state e , write . , action left)", "write": ":", "action": "RIGHT"},
+      { "read" : "1", "to_state": "apply rule to pointer (to_state e , write . , action left)", "write": "1", "action": "RIGHT"},
+      { "read" : "_", "to_state": "apply rule to pointer (to_state e , write . , action left)", "write": "_", "action": "RIGHT"},
+      { "read" : "+", "to_state": "apply rule to pointer (to_state e , write . , action left)", "write": "+", "action": "RIGHT"}
+    ],
+    "apply rule to pointer (to_state h , write . , action right)":[
+      { "read" : "S", "to_state": "apply rule to pointer (to_state h , write . , action right)", "write": "S", "action": "RIGHT"},
+      { "read" : "E", "to_state": "apply rule to pointer (to_state h , write . , action right)", "write": "E", "action": "RIGHT"},
+      { "read" : "h", "to_state": "apply rule to pointer (to_state h , write . , action right)", "write": "h", "action": "RIGHT"},
+      { "read" : "s", "to_state": "apply rule to pointer (to_state h , write . , action right)", "write": "s", "action": "RIGHT"},
+      { "read" : "e", "to_state": "apply rule to pointer (to_state h , write . , action right)", "write": "e", "action": "RIGHT"},
+      { "read" : "r", "to_state": "apply rule to pointer (to_state h , write . , action right)", "write": "r", "action": "RIGHT"},
+      { "read" : "l", "to_state": "apply rule to pointer (to_state h , write . , action right)", "write": "l", "action": "RIGHT"},
+      { "read" : "^", "to_state": "HALT", "write": ".", "action": "RIGHT"},
+      { "read" : ":", "to_state": "apply rule to pointer (to_state h , write . , action right)", "write": ":", "action": "RIGHT"},
+      { "read" : "1", "to_state": "apply rule to pointer (to_state h , write . , action right)", "write": "1", "action": "RIGHT"},
+      { "read" : "_", "to_state": "apply rule to pointer (to_state h , write . , action right)", "write": "_", "action": "RIGHT"},
+      { "read" : "+", "to_state": "apply rule to pointer (to_state h , write . , action right)", "write": "+", "action": "RIGHT"}
+    ],
+    "E": [
+      { "read" : "1", "to_state": "find rule E1", "write": "^", "action": "LEFT"},
+      { "read" : "+", "to_state": "find rule S+", "write": "^", "action": "LEFT"},
+      { "read" : ".", "to_state": "find rule S.", "write": "^", "action": "LEFT"}
+    ],
+    "find rule E1" : [
+      { "read" : "S", "to_state": "find rule E1", "write": "S", "action": "LEFT"},
+      { "read" : "E", "to_state": "check 1", "write": "E", "action": "RIGHT"},
+      { "read" : "h", "to_state": "find rule E1", "write": "h", "action": "LEFT"},
+      { "read" : "s", "to_state": "find rule E1", "write": "s", "action": "LEFT"},
+      { "read" : "e", "to_state": "find rule E1", "write": "e", "action": "LEFT"},
+      { "read" : "r", "to_state": "find rule E1", "write": "r", "action": "LEFT"},
+      { "read" : "l", "to_state": "find rule E1", "write": "l", "action": "LEFT"},
+      { "read" : "^", "to_state": "find rule E1", "write": "^", "action": "LEFT"},
+      { "read" : ":", "to_state": "find rule E1", "write": ":", "action": "LEFT"},
+      { "read" : "1", "to_state": "find rule E1", "write": "1", "action": "LEFT"},
+      { "read" : "_", "to_state": "find rule E1", "write": "_", "action": "LEFT"},
+      { "read" : "+", "to_state": "find rule E1", "write": "+", "action": "LEFT"}
+    ]
   }
 }
