@@ -115,8 +115,3 @@ The program handles various error cases:
 - Invalid machine descriptions
 - Invalid input strings
 - Machine execution errors
-
-## License
-
-This project is part of the 42 school curriculum.
-
