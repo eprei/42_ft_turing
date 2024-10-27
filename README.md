@@ -1,29 +1,49 @@
 # ft_turing
 
-A single-headed, single tape Turing machine simulator that reads machine descriptions from JSON files. This project is part of the 42 school curriculum, focusing on functional programming paradigms and implemented in Scala.
+A Turing machine simulator implemented in Scala that reads machine configurations from JSON files and simulates their execution. This project focuses on functional programming paradigms and is part of the 42 school curriculum.
 
-## Description
+## About
 
-This program simulates a Turing machine by reading a JSON description file containing the machine's specifications (states, transitions, alphabet) and an input string. It then displays the step-by-step execution of the machine, showing the tape state and head position at each transition.
+This project implements a single-headed, single-tape Turing machine simulator that can:
+- Read machine descriptions from JSON configuration files
+- Process input strings according to the machine's rules
+- Display step-by-step execution with visual tape representation
+- Handle multiple types of Turing machines for different computations
+
+## Technologies
+
+- Scala 3.4.1
+- SBT (Scala Build Tool)
+- Libraries:
+  - circe (JSON parsing)
+  - os-lib (file operations)
+  - play-json
+  - scala-toolkit
+
+## Implemented Turing Machines
+
+The project includes several predefined Turing machine configurations:
+
+1. `unary_add.json`: Computes unary addition
+2. `palindrome_decider.json`: Determines if the input is a palindrome
+3. `0n1n.json`: Decides if the input belongs to the language 0ⁿ1ⁿ
+4. `02n.json`: Decides if the input belongs to the language 0²ⁿ
+5. `unary_add_runner.json`: [Meta Turing machine](https://github.com/eprei/42_ft_turing/tree/main/res#readme) that runs the unary addition machine
 
 ## Prerequisites
 
 - Java Runtime Environment (JRE)
 - Scala Build Tool (SBT)
 
-## Installation
+## Building
 
-1. Clone the repository
-
-2. Build the project:
 ```bash
 make compile
 ```
 
 ## Usage
 
-The project includes several predefined Turing machines that can be run using make commands:
-
+The program can be run using make commands for predefined machines:
 ```bash
 # Unary addition
 make run1 INPUT="your_input"
@@ -37,32 +57,13 @@ make run3 INPUT="your_input"
 # Language recognition (0²ⁿ)
 make run4 INPUT="your_input"
 
-# Meta Turing machine (unary addition runner)
+# Meta Turing machine
 make run5 INPUT="your_input"
 ```
 
-### Clean Build
-```bash
-make clean
-```
+## JSON Configuration Format
 
-## Features
-
-- JSON-based machine description
-- Step-by-step visualization of the machine's execution
-- Support for various Turing machine implementations:
-  - Unary addition (`res/unary_add.json`)
-  - Palindrome checker (`res/palindrome_decider.json`)
-  - Language recognition 0ⁿ1ⁿ (`res/0n1n.json`)
-  - Language recognition 0²ⁿ (`res/02n.json`)
-  - Meta Turing machine (`res/unary_add_runner.json`)
-- Error handling for invalid inputs and machine descriptions
-- Visual representation of the tape and head position
-
-## Machine Description Format
-
-The JSON machine description must include:
-
+Machine descriptions use the following JSON format:
 ```json
 {
     "name": "machine_name",
@@ -84,20 +85,45 @@ The JSON machine description must include:
 }
 ```
 
+## Features
+
+- Functional programming approach
+- Immutable data structures
+- Pure functions
+- Pattern matching
+- Error handling using `Either`
+- Type-safe state transitions
+- Visual representation of tape state and head position
+- Comprehensive input validation
+
 ## Project Structure
 
 ```
 .
-├── build.sbt           # SBT build configuration
-├── Makefile           # Build and run commands
-├── res/               # JSON machine descriptions
-│   ├── unary_add.json
-│   ├── palindrome_decider.json
-│   ├── 0n1n.json
-│   ├── 02n.json
-│   └── unary_add_runner.json
-└── src/               # Source code
+├── src/
+│   ├── main/scala/
+│   │   ├── Main.scala           # Entry point
+│   │   ├── ParseArgs.scala      # Command line parsing
+│   │   ├── TuringConfig.scala   # Configuration types
+│   │   ├── TuringMachine.scala  # Core machine logic
+│   │   ├── TuringRule.scala     # Transition rules
+│   │   └── TuringState.scala    # Machine state
+│   └── test/scala/
+│       └── MySuite.scala        # Test suite
+├── res/                         # Machine configurations
+├── build.sbt                    # Build configuration
+└── Makefile                     # Build commands
 ```
+
+## Error Handling
+
+The simulator handles various error cases:
+- Malformed JSON configurations
+- Invalid machine descriptions
+- Invalid input strings
+- Unknown characters in input
+- Invalid state transitions
+- Machine execution errors
 
 ## Example Output
 
@@ -105,13 +131,15 @@ The JSON machine description must include:
 [<1>11-11=.............] (scanright, 1) -> (scanright, 1, RIGHT)
 [1<1>1-11=.............] (scanright, 1) -> (scanright, 1, RIGHT)
 [11<1>-11=.............] (scanright, 1) -> (scanright, 1, RIGHT)
-...
 ```
 
-## Error Handling
+## Functional Programming Focus
 
-The program handles various error cases:
-- Malformed JSON files
-- Invalid machine descriptions
-- Invalid input strings
-- Machine execution errors
+This project emphasizes functional programming concepts:
+- Pure functions with no side effects
+- Immutable data structures
+- Pattern matching for control flow
+- Algebraic data types (ADTs) for state representation
+- Error handling using functional concepts (`Either`, `Option`)
+- Recursive algorithms instead of imperative loops
+- Type safety through the Scala type system
